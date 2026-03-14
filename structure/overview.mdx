@@ -1,0 +1,102 @@
+---
+title: 'Project Structure Overview'
+description: 'Understanding the directory layout and organization of the RSantana Portfolio project'
+---
+
+The RSantana Portfolio is built with Astro and follows a clean, organized structure that separates concerns between components, layouts, pages, and content.
+
+## Directory Layout
+
+Here's the complete directory structure of the project:
+
+```plaintext
+RSantana-portfolio/
+├── public/
+│   ├── Edudu.jpeg
+│   ├── Edudu.png
+│   └── favicon.svg
+├── src/
+│   ├── components/
+│   │   ├── Card.astro
+│   │   ├── Footer.astro
+│   │   ├── Header.astro
+│   │   ├── Nav.astro
+│   │   └── Projects.astro
+│   ├── content/
+│   │   ├── config.ts
+│   │   └── projects/
+│   │       └── Edudu.md
+│   ├── layouts/
+│   │   └── Layout.astro
+│   ├── pages/
+│   │   ├── index.astro
+│   │   ├── projects.astro
+│   │   └── projects/
+│   │       └── [...slug].astro
+│   └── env.d.ts
+└── package.json
+```
+
+## Directory Roles
+
+### `/public`
+Static assets that are served directly without processing. This includes:
+- **Images**: Project screenshots and hero images (`Edudu.jpeg`, `Edudu.png`)
+- **Icons**: Site favicon (`favicon.svg`)
+- **Other static files**: Any files placed here are copied to the build output as-is
+
+<Info>
+Files in `/public` are accessible at the root URL. For example, `/public/favicon.svg` is accessible at `/favicon.svg`.
+</Info>
+
+### `/src/components`
+Reusable Astro components that make up the building blocks of the site:
+- **Header.astro**: Main header with developer name and bio
+- **Nav.astro**: Navigation bar with logo
+- **Card.astro**: Project card component for displaying individual projects
+- **Projects.astro**: Projects section that fetches and displays all projects
+- **Footer.astro**: Site footer with social links and copyright
+
+### `/src/layouts`
+Layout templates that wrap page content:
+- **Layout.astro**: The main layout template with Bootstrap integration, fonts, and animation scripts
+
+### `/src/pages`
+File-based routing for the website. Each `.astro` file becomes a route:
+- **index.astro**: Home page (`/`)
+- **projects.astro**: Projects listing page (`/projects`)
+- **projects/[...slug].astro**: Dynamic route for individual project pages
+
+<Note>
+Astro uses file-based routing. The file structure in `/src/pages` directly maps to URL paths.
+</Note>
+
+### `/src/content`
+Content collections for type-safe, structured content:
+- **config.ts**: Defines the schema for content collections
+- **projects/**: Markdown files for project entries
+
+<Tip>
+Using content collections provides type safety and validation for your content, making it easier to maintain consistency across all projects.
+</Tip>
+
+## Key Features
+
+### Bootstrap Integration
+The project uses Bootstrap 5.3.3 for styling and responsive design, loaded via CDN in the Layout component.
+
+### Google Fonts
+Custom typography using the Onest font family from Google Fonts.
+
+### Intersection Observer
+Smooth scroll animations powered by the Intersection Observer API for fade-in effects.
+
+### Type Safety
+TypeScript support with Zod schemas for content validation.
+
+## Next Steps
+
+Explore the individual sections:
+- [Components](/structure/components) - Deep dive into each component
+- [Layouts](/structure/layouts) - Understanding the Layout.astro file
+- [Content Collections](/structure/content-collections) - Working with content schemas

@@ -1,0 +1,215 @@
+---
+title: 'Card Component'
+description: 'Reusable project card component for displaying portfolio items'
+---
+
+## Overview
+
+The Card component is a reusable component designed to display individual project information in a visually appealing card format. It includes an image, title, tag, and links to the project.
+
+## Component Code
+
+```astro
+---
+interface Props {
+    src: string;
+    description: string;
+    title: string;
+    tag: string;
+    url: string;
+}
+const { src, description, title, tag, url } = Astro.props;
+---
+
+<article>
+        <a href={url} class="text-decoration-none" target="_blank" rel="noopener noreferrer">
+            <section class="w-100 ratio ratio-16x9 rounded-2 overflow-hidden position-relative">
+                <img src={src} alt={description} class="img-fluid object-fit-scale rounded-2">
+            </section>
+            <section class="pt-4">
+                <h2 class="fs-5 fw-bold mb-1">{title}</h2>
+                <h2 class="fs-6">{tag}</h2>
+            </section>
+        </a>
+</article>
+```
+
+## Props
+
+The Card component accepts the following props:
+
+<ParamField path="src" type="string" required>
+  The URL path to the project's hero/preview image
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  A description of the project, used as the alt text for the image (important for accessibility)
+</ParamField>
+
+<ParamField path="title" type="string" required>
+  The project title displayed below the image
+</ParamField>
+
+<ParamField path="tag" type="string" required>
+  A category or technology tag for the project (e.g., "Web Development", "E-commerce")
+</ParamField>
+
+<ParamField path="url" type="string" required>
+  The external URL where the project can be viewed
+</ParamField>
+
+## Features
+
+### Responsive Image Container
+The card uses Bootstrap's aspect ratio utility:
+- `ratio ratio-16x9`: Maintains a 16:9 aspect ratio for consistent image display
+- `w-100`: Full width of the container
+- `overflow-hidden`: Clips any overflow from the image
+- `rounded-2`: Rounded corners for modern aesthetic
+
+### External Link Handling
+The entire card is wrapped in an anchor tag with:
+- `target="_blank"`: Opens project in a new tab
+- `rel="noopener noreferrer"`: Security best practice for external links
+- `text-decoration-none`: Removes default underline styling
+
+### Semantic HTML
+Uses proper semantic elements:
+- `<article>`: Represents a self-contained composition
+- `<section>`: Groups related content
+- `<h2>`: Proper heading hierarchy for title and tag
+
+## Bootstrap Classes Used
+
+<ParamField path="ratio ratio-16x9" type="layout">
+  Bootstrap's aspect ratio helper maintaining 16:9 proportions
+</ParamField>
+
+<ParamField path="w-100" type="sizing">
+  Width of 100% of parent container
+</ParamField>
+
+<ParamField path="rounded-2" type="borders">
+  Border radius level 2 for subtle rounded corners
+</ParamField>
+
+<ParamField path="overflow-hidden" type="layout">
+  Clips content that overflows the element's box
+</ParamField>
+
+<ParamField path="position-relative" type="layout">
+  Sets positioning context for potential absolute children
+</ParamField>
+
+<ParamField path="img-fluid" type="image">
+  Makes images responsive (max-width: 100%, height: auto)
+</ParamField>
+
+<ParamField path="object-fit-scale" type="image">
+  Scales the image to maintain aspect ratio
+</ParamField>
+
+<ParamField path="pt-4" type="spacing">
+  Padding top of 4 spacing units
+</ParamField>
+
+<ParamField path="fs-5" type="typography">
+  Font size 5 for the title
+</ParamField>
+
+<ParamField path="fw-bold" type="typography">
+  Bold font weight for the title
+</ParamField>
+
+<ParamField path="mb-1" type="spacing">
+  Margin bottom of 1 spacing unit between title and tag
+</ParamField>
+
+<ParamField path="fs-6" type="typography">
+  Font size 6 (smaller) for the tag
+</ParamField>
+
+## Usage Example
+
+### Direct Usage
+
+```astro
+---
+import Card from '../components/Card.astro';
+---
+
+<Card 
+  src="/images/ecommerce-project.jpg"
+  description="Modern e-commerce platform for fashion retail"
+  title="Fashion Store"
+  tag="E-commerce"
+  url="https://example.com/fashion-store"
+/>
+```
+
+### Usage in Projects Component
+
+The Card component is typically used within the Projects component, which maps over a collection:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+import Card from "./Card.astro";
+const projects = await getCollection('projects');
+---
+
+<section class="row gap-3">
+  {projects.map((project) => (
+    <Card 
+      src={project.data.heroImage}
+      description={project.data.description}
+      title={project.data.title}
+      tag={project.data.tag}
+      url={project.data.url}
+    />
+  ))}
+</section>
+```
+
+## Design Features
+
+<Tip>
+  The entire card is clickable, providing a larger touch target and better user experience on mobile devices.
+</Tip>
+
+### Visual Hierarchy
+1. **Image**: Large, 16:9 aspect ratio draws attention first
+2. **Title**: Bold, larger font size (fs-5)
+3. **Tag**: Smaller, lighter font (fs-6) provides context
+
+### Hover Effects
+
+<Note>
+  While the component doesn't include explicit hover styles in the code, you can add custom hover effects through global styles or by extending this component.
+</Note>
+
+Suggested hover enhancement:
+
+```css
+article a:hover img {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+```
+
+## Accessibility
+
+<Note>
+  The component follows accessibility best practices:
+  - Uses semantic HTML (`<article>`, `<section>`)
+  - Provides descriptive alt text via the description prop
+  - Includes proper heading hierarchy
+  - Uses `rel="noopener noreferrer"` for external links
+</Note>
+
+## Common Use Cases
+
+1. **Portfolio Projects**: Showcase web development projects
+2. **Case Studies**: Link to detailed project pages
+3. **Client Work**: Display client websites or applications
+4. **Side Projects**: Highlight personal projects and experiments

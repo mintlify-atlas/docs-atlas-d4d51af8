@@ -1,0 +1,129 @@
+---
+title: 'Nav Component'
+description: 'Simple navigation component with logo link'
+---
+
+## Overview
+
+The Nav component provides a minimal, clean navigation bar featuring the site logo that serves as a link back to the homepage.
+
+## Component Code
+
+```astro
+<nav class="d-flex align-items-center justify-content-between py-4 mb-md-5 mb-lg-5 animate-on-load animate-delay-1">
+    <a href="/">
+        <img src="/favicon.svg" alt="" />
+    </a>
+</nav>
+
+<style>
+	img {
+		width: 50px;
+		height: 50px;
+	}
+</style>
+```
+
+## Features
+
+### Logo as Home Link
+The navigation contains:
+- A clickable logo image that links to the homepage (`/`)
+- Uses the site's favicon as the logo (`/favicon.svg`)
+- Simple, clean design without additional navigation items
+
+### Scoped Styling
+The component includes scoped styles that:
+- Set the logo to a fixed 50px × 50px size
+- Ensure consistent display across devices
+
+## Bootstrap Classes Used
+
+<ParamField path="d-flex" type="layout">
+  Applies flexbox display to the nav element
+</ParamField>
+
+<ParamField path="align-items-center" type="flexbox">
+  Vertically centers items along the cross axis
+</ParamField>
+
+<ParamField path="justify-content-between" type="flexbox">
+  Distributes space between items (prepared for future navigation items)
+</ParamField>
+
+<ParamField path="py-4" type="spacing">
+  Padding on Y-axis (top and bottom) of 4 spacing units
+</ParamField>
+
+<ParamField path="mb-md-5" type="spacing">
+  Margin bottom of 5 units on medium screens and above
+</ParamField>
+
+<ParamField path="mb-lg-5" type="spacing">
+  Margin bottom of 5 units on large screens and above
+</ParamField>
+
+## Animation Features
+
+<Note>
+  The navigation is the first element to animate on page load:
+  - `animate-on-load`: Triggers animation when page loads
+  - `animate-delay-1`: First in the animation sequence
+</Note>
+
+This creates a top-down loading effect where the navigation appears first, followed by other page elements.
+
+## Usage Example
+
+```astro
+---
+import Nav from '../components/Nav.astro';
+---
+
+<html>
+  <body>
+    <Nav />
+    <!-- Rest of your page content -->
+  </body>
+</html>
+```
+
+## Design Decisions
+
+<Tip>
+  The use of `justify-content-between` suggests the navigation is designed to accommodate additional items in the future, even though currently it only contains the logo.
+</Tip>
+
+### Why SVG?
+The component uses an SVG favicon because:
+- SVGs are resolution-independent and scale perfectly
+- Smaller file size compared to raster images
+- Better for responsive design
+- Crisp appearance on retina/high-DPI displays
+
+## Accessibility Considerations
+
+<Note>
+  The image currently has an empty `alt` attribute. For better accessibility, consider adding descriptive alt text such as "Ronald Santana Portfolio Logo" or "Home".
+</Note>
+
+## Customization
+
+To customize the navigation:
+
+1. **Change logo size**: Modify the `width` and `height` in the scoped `<style>` block
+2. **Add navigation items**: Insert additional links after the logo anchor tag
+3. **Update logo**: Replace `/favicon.svg` with your logo path
+
+```astro
+<nav class="d-flex align-items-center justify-content-between py-4 mb-md-5 mb-lg-5 animate-on-load animate-delay-1">
+    <a href="/">
+        <img src="/favicon.svg" alt="Home" />
+    </a>
+    <!-- Add additional nav items here -->
+    <div class="nav-links">
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </div>
+</nav>
+```

@@ -1,0 +1,148 @@
+---
+title: Deployment Overview
+description: Learn how to deploy your Astro portfolio site to various hosting platforms
+---
+
+## Build Process
+
+Astro generates a static site that can be deployed to any static hosting platform. The build process is simple:
+
+```bash
+npm run build
+```
+
+This command compiles your Astro project and outputs static files to the `dist/` directory. These files include:
+
+- HTML files for each page
+- Optimized CSS and JavaScript
+- Static assets (images, fonts, etc.)
+- Any other public files
+
+## Deployment Platforms
+
+Astro sites can be deployed to any platform that supports static hosting. Here are the most popular options:
+
+<CardGroup cols={2}>
+  <Card title="GitHub Pages" icon="github" href="https://pages.github.com">
+    Free hosting directly from your GitHub repository. Perfect for personal portfolios and open-source projects.
+  </Card>
+  
+  <Card title="Netlify" icon="globe" href="https://netlify.com">
+    Zero-config deployment with automatic builds from Git. Includes CDN, forms, and serverless functions.
+  </Card>
+  
+  <Card title="Vercel" icon="triangle" href="https://vercel.com">
+    Optimized for performance with edge network deployment. Great developer experience with preview deployments.
+  </Card>
+  
+  <Card title="Cloudflare Pages" icon="cloud" href="https://pages.cloudflare.com">
+    Deploy to Cloudflare's global network with unlimited bandwidth on the free tier.
+  </Card>
+</CardGroup>
+
+## Quick Deployment Instructions
+
+### GitHub Pages
+
+<Steps>
+  <Step title="Configure astro.config.mjs">
+    Set the `site` and `base` options:
+    ```js
+    export default defineConfig({
+      site: 'https://username.github.io',
+      base: '/repository-name',
+    });
+    ```
+  </Step>
+  
+  <Step title="Build your site">
+    ```bash
+    npm run build
+    ```
+  </Step>
+  
+  <Step title="Deploy">
+    Use GitHub Actions (see [GitHub Actions workflow](/deployment/github-actions)) or push the `dist/` folder to the `gh-pages` branch.
+  </Step>
+</Steps>
+
+### Netlify
+
+<Steps>
+  <Step title="Connect your repository">
+    Sign in to Netlify and click "Add new site" → "Import an existing project".
+  </Step>
+  
+  <Step title="Configure build settings">
+    - Build command: `npm run build`
+    - Publish directory: `dist`
+  </Step>
+  
+  <Step title="Deploy">
+    Click "Deploy site". Netlify will automatically rebuild on every push to your main branch.
+  </Step>
+</Steps>
+
+### Vercel
+
+<Steps>
+  <Step title="Import your project">
+    Sign in to Vercel and click "Add New" → "Project".
+  </Step>
+  
+  <Step title="Configure project">
+    Vercel automatically detects Astro projects. Verify:
+    - Build command: `npm run build`
+    - Output directory: `dist`
+  </Step>
+  
+  <Step title="Deploy">
+    Click "Deploy". Vercel provides preview deployments for every push.
+  </Step>
+</Steps>
+
+### Cloudflare Pages
+
+<Steps>
+  <Step title="Create a new project">
+    In the Cloudflare dashboard, go to Pages and click "Create a project".
+  </Step>
+  
+  <Step title="Connect your Git repository">
+    Authorize Cloudflare to access your repository.
+  </Step>
+  
+  <Step title="Set build configuration">
+    - Build command: `npm run build`
+    - Build output directory: `dist`
+  </Step>
+  
+  <Step title="Deploy">
+    Click "Save and Deploy". Your site will be live on Cloudflare's global network.
+  </Step>
+</Steps>
+
+## Custom Hosting (cPanel/FTP)
+
+You can also deploy to traditional web hosting via FTP. This portfolio uses GitHub Actions to automatically deploy to cPanel.
+
+<Warning>
+  When deploying to custom hosting, ensure your hosting provider:
+  - Supports static file hosting
+  - Has proper file permissions configured
+  - Serves `index.html` files by default
+</Warning>
+
+See the [GitHub Actions workflow](/deployment/github-actions) for automated deployment to cPanel via FTP.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="GitHub Actions Setup" icon="robot" href="/deployment/github-actions">
+    Learn how to automate deployments with GitHub Actions
+  </Card>
+  
+  <Card title="Styling Guide" icon="palette" href="/customization/styling">
+    Customize colors, fonts, and layout to match your brand
+  </Card>
+</CardGroup>

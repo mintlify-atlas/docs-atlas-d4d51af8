@@ -1,80 +1,259 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get the RSantana Portfolio up and running on your local machine in minutes
 ---
 
-## Get started in three steps
+## Prerequisites
 
-Get your documentation site running locally and make your first customization.
+Before you begin, ensure you have the following installed on your system:
 
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+- **Node.js** (version 18.14.1 or higher)
+- **npm**, **yarn**, or **pnpm** package manager
+- A code editor (VS Code recommended)
+- Git for version control
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  You can check your Node.js version by running `node --version` in your terminal.
+</Note>
+
+## Installation
+
+Follow these steps to get your portfolio running locally:
+
+<Steps>
+  <Step title="Clone the repository">
+    First, clone the RSantana Portfolio repository to your local machine:
+
+    ```bash
+    git clone <repository-url>
+    cd rsantana
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install the required dependencies using your preferred package manager:
+
+    <CodeGroup>
+      ```bash npm
+      npm install
+      ```
+
+      ```bash yarn
+      yarn install
+      ```
+
+      ```bash pnpm
+      pnpm install
+      ```
+    </CodeGroup>
+
+    This will install Astro v5.13.10 and all necessary dependencies defined in `package.json`.
+  </Step>
+
+  <Step title="Start the development server">
+    Launch the Astro development server:
+
+    <CodeGroup>
+      ```bash npm
+      npm run dev
+      ```
+
+      ```bash yarn
+      yarn dev
+      ```
+
+      ```bash pnpm
+      pnpm dev
+      ```
+    </CodeGroup>
+
+    You should see output similar to:
+
+    ```plaintext
+    🚀 astro v5.13.10 started in XXms
+
+    ┃ Local    http://localhost:4321/
+    ┃ Network  use --host to expose
+    ```
+  </Step>
+
+  <Step title="View your portfolio">
+    Open your browser and navigate to:
+
+    ```
+    http://localhost:4321
+    ```
+
+    You should see the portfolio homepage with:
+    - Navigation bar
+    - Header section with developer introduction
+    - Projects showcase section
+    - Footer component
+  </Step>
+</Steps>
+
+## Available Scripts
+
+The portfolio comes with several npm scripts defined in `package.json`:
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Starts the development server with hot module replacement |
+| `npm run build` | Builds the production-ready static site |
+| `npm run preview` | Previews the production build locally |
+| `npm run astro` | Runs Astro CLI commands |
+
+## Building for Production
+
+When you're ready to deploy your portfolio, create a production build:
+
+<CodeGroup>
+  ```bash npm
+  npm run build
+  ```
+
+  ```bash yarn
+  yarn build
+  ```
+
+  ```bash pnpm
+  pnpm build
+  ```
+</CodeGroup>
+
+This command:
+1. Generates static HTML files for all pages
+2. Optimizes images and assets
+3. Creates individual project pages from content collections
+4. Outputs everything to the `dist/` directory
+
+<Note>
+  The build process uses Astro's static site generation. All routes are pre-rendered at build time for optimal performance.
+</Note>
+
+## Preview Production Build
+
+Before deploying, you can preview your production build locally:
+
+<CodeGroup>
+  ```bash npm
+  npm run preview
+  ```
+
+  ```bash yarn
+  yarn preview
+  ```
+
+  ```bash pnpm
+  pnpm preview
+  ```
+</CodeGroup>
+
+This serves the contents of the `dist/` directory, allowing you to test the production build before deployment.
+
+## Project Structure
+
+After installation, you'll see the following structure:
+
+```plaintext
+rsantana/
+├── public/              # Static assets (images, favicon)
+│   ├── Edudu.png
+│   └── favicon.svg
+├── src/
+│   ├── components/      # Reusable components
+│   ├── content/         # Content collections
+│   │   ├── config.ts    # Type-safe schemas
+│   │   └── projects/    # Project markdown files
+│   ├── layouts/         # Page layouts
+│   └── pages/           # Route pages
+├── astro.config.mjs     # Astro configuration
+├── package.json         # Dependencies and scripts
+└── tsconfig.json        # TypeScript configuration
+```
+
+## Development Workflow
+
+### Hot Module Replacement
+
+The development server includes HMR (Hot Module Replacement):
+- Save any `.astro` file to see changes instantly
+- Edit components and see updates without refresh
+- Modify content collections and pages regenerate automatically
+
+### Adding Projects
+
+To add a new project to your portfolio:
+
+1. Create a new Markdown file in `src/content/projects/`:
+
+```markdown
+---
+title: 'Your Project Name'
+description: 'Brief project description'
+pubDate: '2024-01-15'
+heroImage: '/project-image.png'
+tag: 'Web Developer'
+url: 'https://your-project-url.com/'
+---
+
+Your project content in Markdown format...
+```
+
+2. Add the project image to the `public/` directory
+3. The project will automatically appear on the homepage and have its own route
+
+<Warning>
+  Make sure your project frontmatter matches the schema defined in `src/content/config.ts`. Required fields are `title`, `description`, and `pubDate`.
+</Warning>
+
+## Next Steps
+
+Now that you have the portfolio running, explore these guides:
+
+<CardGroup cols={2}>
+  <Card title="Add Projects" icon="pencil" href="/customization/adding-projects">
+    Learn how to add your projects and personalize content
+  </Card>
+  <Card title="Modify Styling" icon="palette" href="/customization/styling">
+    Customize colors, fonts, and layout to match your brand
+  </Card>
+  <Card title="Content Collections" icon="folder" href="/structure/content-collections">
+    Deep dive into managing projects with Astro's content collections
+  </Card>
+  <Card title="Deploy" icon="rocket" href="/deployment/overview">
+    Deploy your portfolio to Netlify, Vercel, or other platforms
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+### Port Already in Use
+
+If port 4321 is already in use, specify a different port:
+
+```bash
+npm run dev -- --port 3000
+```
+
+### Node Version Issues
+
+Ensure you're using Node.js 18.14.1 or higher. Use `nvm` to manage Node versions:
+
+```bash
+nvm install 18
+nvm use 18
+```
+
+### Module Not Found Errors
+
+Delete `node_modules` and reinstall:
+
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+<Note>
+  For more help, check the [Astro documentation](https://docs.astro.build) or open an issue in the repository.
 </Note>

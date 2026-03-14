@@ -1,0 +1,114 @@
+---
+title: Introduction
+description: Learn about the RSantana Portfolio - a modern personal portfolio website built with Astro and Bootstrap 5
+---
+
+## Overview
+
+The **RSantana Portfolio** is a modern, high-performance personal portfolio website showcasing web development projects and skills. Built with Astro's static site generation and styled with Bootstrap 5, this portfolio demonstrates best practices in modern web development while maintaining simplicity and performance.
+
+The portfolio features a clean, minimalist design with smooth animations and a responsive layout that works seamlessly across all devices.
+
+## Key Features
+
+### Content Collections
+Leverage Astro's powerful content collections system for managing projects. Each project is defined with type-safe frontmatter including:
+- Title and description
+- Publication and update dates
+- Hero images
+- Project tags
+- External project URLs
+
+### Bootstrap 5 Integration
+Fully integrated Bootstrap 5 framework providing:
+- Responsive grid system
+- Pre-built components (breadcrumbs, navigation)
+- Bootstrap Icons for visual elements
+- Mobile-first responsive design
+
+### Intersection Observer Animations
+Smooth scroll-triggered animations using the native Intersection Observer API:
+- Fade-in-up effects for project cards
+- Staggered animation delays for visual interest
+- Performance-optimized with automatic observer cleanup
+
+### Astro Static Site Generation
+Benefit from Astro's modern architecture:
+- Zero JavaScript by default for optimal performance
+- Static site generation for fast page loads
+- Dynamic routing for project pages
+- View transitions for smooth navigation
+
+### Project Showcase with Dynamic Routing
+Automatic project page generation using Astro's file-based routing:
+- Dynamic `[...slug]` routes for individual projects
+- Breadcrumb navigation for better UX
+- Content rendering from Markdown files
+
+## Tech Stack
+
+<CardGroup cols={2}>
+  <Card title="Astro" icon="rocket">
+    Static site generator with modern architecture and zero-JS by default
+  </Card>
+  <Card title="Bootstrap 5" icon="palette">
+    CSS framework for responsive design and pre-built components
+  </Card>
+  <Card title="TypeScript" icon="code">
+    Type-safe content schemas and component props
+  </Card>
+  <Card title="Content Collections" icon="folder">
+    Structured content management with Zod validation
+  </Card>
+</CardGroup>
+
+## Architecture
+
+The portfolio follows Astro's recommended project structure:
+
+```plaintext
+src/
+├── components/      # Reusable Astro components
+│   ├── Card.astro
+│   ├── Header.astro
+│   ├── Nav.astro
+│   ├── Projects.astro
+│   └── Footer.astro
+├── content/         # Content collections
+│   ├── config.ts    # Collection schemas
+│   └── projects/    # Project markdown files
+├── layouts/         # Page layouts
+│   └── Layout.astro
+└── pages/           # File-based routing
+    ├── index.astro
+    ├── projects.astro
+    └── projects/[...slug].astro
+```
+
+## What You'll Build
+
+By following this documentation, you'll be able to:
+
+1. **Set up the development environment** - Get the portfolio running locally in minutes
+2. **Customize content** - Add your own projects, skills, and personal information
+3. **Modify styling** - Customize colors, fonts, and layout to match your brand
+4. **Deploy the site** - Deploy your portfolio to Netlify, Vercel, or any static hosting provider
+5. **Extend functionality** - Add new sections, components, and features as needed
+
+<Note>
+  This portfolio is built with performance and SEO in mind. Astro generates static HTML with minimal JavaScript, resulting in excellent Core Web Vitals scores.
+</Note>
+
+## Design Philosophy
+
+The RSantana Portfolio embraces several key principles:
+
+- **Performance First**: Static generation and minimal JavaScript ensure fast load times
+- **Content-Focused**: Clean, minimalist design puts your projects front and center
+- **Accessibility**: Semantic HTML and proper ARIA labels for screen readers
+- **Maintainability**: Type-safe schemas and component-based architecture
+- **Internationalization**: Currently in Spanish, easily adaptable to other languages
+
+## Next Steps
+
+Ready to get started? Head over to the [Quickstart Guide](/quickstart) to set up your development environment and start customizing your portfolio.

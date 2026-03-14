@@ -1,0 +1,201 @@
+---
+title: 'Components Directory'
+description: 'Exploring the reusable Astro components in the RSantana Portfolio'
+---
+
+The components directory contains all reusable UI components that make up the portfolio site. Each component is built with Astro and follows a modular, composable architecture.
+
+## Components Overview
+
+```plaintext
+src/components/
+├── Card.astro
+├── Footer.astro
+├── Header.astro
+├── Nav.astro
+└── Projects.astro
+```
+
+## Component Descriptions
+
+### Nav.astro
+
+The navigation component displays the site logo and provides navigation functionality.
+
+**Purpose**: Simple navigation bar with home link
+
+**Key Features**:
+- Logo image display
+- Home page navigation
+- Fade-in animation on load
+- Responsive sizing (50x50px)
+
+**Usage in pages**:
+```astro
+import Nav from "../components/Nav.astro";
+
+<Nav />
+```
+
+### Header.astro
+
+The main header section introducing Ronald Santana and his skills.
+
+**Purpose**: Hero section with developer introduction and tech stack
+
+**Key Features**:
+- Developer name and title
+- Bio description with highlighted technologies
+- Bootstrap typography classes
+- Delayed animation on page load
+
+**Technologies Highlighted**:
+- HTML, CSS, JavaScript
+- Astro, Bootstrap, WordPress
+
+**Usage in pages**:
+```astro
+import Header from "../components/Header.astro";
+
+<Header />
+```
+
+### Card.astro
+
+A reusable card component for displaying individual project information.
+
+**Purpose**: Display project preview with image, title, tag, and link
+
+**Props Interface**:
+```typescript
+interface Props {
+    src: string;        // Image source URL
+    description: string; // Alt text for image
+    title: string;      // Project title
+    tag: string;        // Project category/tag
+    url: string;        // External project URL
+}
+```
+
+**Key Features**:
+- 16:9 aspect ratio image container
+- Rounded corners with Bootstrap classes
+- External link support with `target="_blank"`
+- Hover-ready design (no underline on links)
+
+**Usage example**:
+```astro
+import Card from "./Card.astro";
+
+<Card 
+    src="/Edudu.png"
+    description="Educational platform"
+    title="Edudu"
+    tag="Web Application"
+    url="https://example.com"
+/>
+```
+
+<Info>
+The Card component uses `rel="noopener noreferrer"` for security when opening external links.
+</Info>
+
+### Projects.astro
+
+The projects section component that fetches and displays all projects from the content collection.
+
+**Purpose**: Dynamically render all project cards from the content collection
+
+**Key Features**:
+- Fetches projects using `getCollection('projects')`
+- Maps through projects to render Card components
+- Bootstrap grid layout with gap-3
+- Scroll-triggered fade-in animation
+
+**Code structure**:
+```astro
+import { getCollection } from 'astro:content';
+import Card from "./Card.astro";
+
+const projects = await getCollection('projects');
+
+// Renders each project as a Card component
+{projects.map((project: any) => (
+    <Card 
+        src={project.data.heroImage}
+        description={project.data.description}
+        title={project.data.title}
+        tag={project.data.tag}
+        url={project.data.url}
+    />
+))}
+```
+
+<Note>
+This component demonstrates Astro's content collections API, fetching data at build time for optimal performance.
+</Note>
+
+### Footer.astro
+
+The site footer with social links and copyright information.
+
+**Purpose**: Provide social media links and site attribution
+
+**Key Features**:
+- Navigation links (Linkedin, Github, Email)
+- Bootstrap Icons integration
+- Copyright notice
+- Client-side time update script (TypeScript)
+- Delayed animation on page load
+
+**Code excerpt**:
+```astro
+<footer class="my-5 py-5 animate-on-load animate-delay-4">
+    <ul class="nav gap-4 mb-2">
+        <li class="nav-item">
+            <a class="nav-link fw-medium p-0 text-secondary" href="/projects">
+                <i class="bi bi-arrow-right"></i>
+                Linkedin
+            </a>
+        </li>
+        <!-- More links... -->
+    </ul>
+    <p>&copy; Diseñado y desarrollado por Ronald Santana 2025</p>
+</footer>
+```
+
+<Tip>
+The Footer component includes a TypeScript script that updates the current time every second using `setInterval`.
+</Tip>
+
+## Animation System
+
+All components use a consistent animation system:
+
+- **`animate-on-load`**: Base animation class
+- **`animate-delay-1` to `animate-delay-4`**: Staggered animation delays
+- **`fade-in-up`**: Scroll-triggered animations via Intersection Observer
+
+## Component Composition
+
+Here's how components work together on the home page:
+
+```astro
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Header from "../components/Header.astro";
+import Projects from "../components/Projects.astro";
+import Footer from "../components/Footer.astro";
+
+<Layout title="Ronald Santana - Portfolio">
+    <Nav />      <!-- Logo and navigation -->
+    <Header />   <!-- Hero section -->
+    <Projects /> <!-- Projects grid -->
+    <Footer />   <!-- Social links and copyright -->
+</Layout>
+```
+
+## Related Documentation
+
+- [Layouts](/structure/layouts) - Learn about the Layout wrapper component
+- [Content Collections](/structure/content-collections) - Understand how Projects.astro fetches data

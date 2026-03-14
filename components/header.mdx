@@ -1,0 +1,100 @@
+---
+title: 'Header Component'
+description: 'The main header component displaying the developer bio and introduction'
+---
+
+## Overview
+
+The Header component serves as the main introduction section of the portfolio, displaying the developer's name, role, and a brief bio highlighting their skills and technologies.
+
+## Component Code
+
+```astro
+<header class="mb-lg-5 py-5 animate-on-load animate-delay-2">
+    <h1 class="fs-6 mb-3">Web Developer <br> <strong class="fs-2">Ronald Santana</strong></h1>
+    <p class="mb-3">Prospero en entornos que combinan diseño y desarrollo, combinando la estética con la excelencia técnica para crear Sitios web y aplicaciones de alto impacto. Conocimientos en Usar <strong>HTML</strong>, <strong>CSS</strong>, <strong>JavaScript</strong>. <strong>Astro</strong>, <strong>Bootstrap</strong>, <strong>WordPress</strong>.</p>
+</header>
+```
+
+## Features
+
+### Developer Introduction
+The header displays:
+- **Role**: "Web Developer"
+- **Name**: "Ronald Santana" (emphasized with larger font)
+- **Bio**: A professional description in Spanish highlighting the combination of design and development skills
+
+### Technologies Mentioned
+The component explicitly highlights proficiency in:
+- **HTML** - Markup language
+- **CSS** - Styling
+- **JavaScript** - Programming language
+- **Astro** - Static site generator framework
+- **Bootstrap** - CSS framework
+- **WordPress** - Content management system
+
+## Bootstrap Classes Used
+
+<ParamField path="mb-lg-5" type="spacing">
+  Margin bottom of 5 spacing units on large screens and above
+</ParamField>
+
+<ParamField path="py-5" type="spacing">
+  Padding on Y-axis (top and bottom) of 5 spacing units
+</ParamField>
+
+<ParamField path="fs-6" type="typography">
+  Font size 6 (smaller size for "Web Developer" text)
+</ParamField>
+
+<ParamField path="fs-2" type="typography">
+  Font size 2 (larger size for the developer name)
+</ParamField>
+
+<ParamField path="mb-3" type="spacing">
+  Margin bottom of 3 spacing units
+</ParamField>
+
+## Animation Features
+
+<Note>
+  The header uses custom animation classes:
+  - `animate-on-load`: Triggers animation when the page loads
+  - `animate-delay-2`: Applies a 2-step delay to create a staggered entrance effect
+</Note>
+
+This creates a smooth, professional loading sequence where elements appear in order:
+1. Navigation (delay-1)
+2. Header (delay-2)
+3. Projects (delay-3)
+4. Footer (delay-4)
+
+## Usage Example
+
+```astro
+---
+import Header from '../components/Header.astro';
+---
+
+<html>
+  <body>
+    <Header />
+    <!-- Rest of your page -->
+  </body>
+</html>
+```
+
+## Styling Notes
+
+<Tip>
+  The component uses a `<br>` tag to create a line break between the role and name, creating a visually distinct two-line heading structure.
+</Tip>
+
+The name is wrapped in a `<strong>` tag with a larger font size (`fs-2`) to create visual hierarchy and emphasis, while the role "Web Developer" uses a smaller font size (`fs-6`).
+
+## Accessibility
+
+The component uses semantic HTML with a proper `<header>` element and heading hierarchy starting with `<h1>`, which is important for:
+- Screen readers
+- SEO optimization
+- Document outline structure

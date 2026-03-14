@@ -1,0 +1,317 @@
+---
+title: 'Content Collections'
+description: 'Working with Astro content collections for type-safe project data'
+---
+
+Content collections in Astro provide a powerful way to organize and validate structured content like blog posts, projects, or documentation. The RSantana Portfolio uses content collections to manage project data with full type safety.
+
+## What are Content Collections?
+
+Content collections are a feature in Astro that allow you to:
+- Define schemas for your content with Zod
+- Get TypeScript autocompletion for frontmatter
+- Validate content at build time
+- Query content with type-safe APIs
+
+<Info>
+Content collections live in the `src/content/` directory and are configured in `src/content/config.ts`.
+</Info>
+
+## Directory Structure
+
+```plaintext
+src/content/
+├── config.ts           # Schema definitions
+└── projects/           # Project collection
+    └── Edudu.md        # Individual project entry
+```
+
+## Schema Definition
+
+The content schema is defined in `src/content/config.ts`:
+
+```typescript
+import { defineCollection, z } from 'astro:content';
+
+const projectsCollection = defineCollection({
+  // Type-check frontmatter using a schema
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    // Transform string to Date object
+    pubDate: z
+      .string()
+      .or(z.date())
+      .transform((val) => new Date(val)),
+    updatedDate: z
+      .string()
+      .optional()
+      .transform((str) => (str ? new Date(str) : undefined)),
+    heroImage: z.string().optional(),
+    tag: z.string().optional(),
+    // Optional direct URL to the project (absolute https:// or root-relative /path)
+    url: z.string().optional(),
+  }),
+});
+
+export const collections = { 'projects': projectsCollection };
+```
+
+## Schema Fields
+
+### Required Fields
+
+<CodeGroup>
+```typescript title
+title: z.string()
+```
+
+```typescript description
+description: z.string()
+```
+
+```typescript pubDate
+pubDate: z
+  .string()
+  .or(z.date())
+  .transform((val) => new Date(val))
+```
+</CodeGroup>
+
+**`title`**: The project name  
+**`description`**: A brief description of the project  
+**`pubDate`**: Publication date, accepts string or Date and transforms to Date object
+
+### Optional Fields
+
+<CodeGroup>
+```typescript updatedDate
+updatedDate: z
+  .string()
+  .optional()
+  .transform((str) => (str ? new Date(str) : undefined))
+```
+
+```typescript heroImage
+heroImage: z.string().optional()
+```
+
+```typescript tag
+tag: z.string().optional()
+```
+
+```typescript url
+url: z.string().optional()
+```
+</CodeGroup>
+
+**`updatedDate`**: Last updated date, transforms string to Date or undefined  
+**`heroImage`**: Path to project preview image  
+**`tag`**: Category or technology tag  
+**`url`**: External link to the live project
+
+<Tip>
+The `transform` method allows you to convert frontmatter values (like date strings) into more useful types like Date objects.
+</Tip>
+
+## Querying Collections
+
+Use the `getCollection` function to fetch all entries from a collection:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+import Card from "./Card.astro";
+
+const projects = await getCollection('projects');
+---
+
+<section id="projects">
+    <header>
+        <h2>Proyectos</h2>
+    </header>
+    <section class="row gap-3">
+        {projects.map((project: any) => (
+            <Card 
+                src={project.data.heroImage}
+                description={project.data.description}
+                title={project.data.title}
+                tag={project.data.tag}
+                url={project.data.url}
+            />
+        ))}
+    </section>
+</section>
+```
+
+### Accessing Collection Data
+
+Each collection entry has two main properties:
+
+```typescript
+{
+  slug: string,      // The file name without extension
+  data: {            // The validated frontmatter data
+    title: string,
+    description: string,
+    pubDate: Date,
+    updatedDate?: Date,
+    heroImage?: string,
+    tag?: string,
+    url?: string
+  }
+}
+```
+
+<Note>
+The `data` property contains all the frontmatter fields defined in your schema, fully typed and validated.
+</Note>
+
+## Example Project Entry
+
+Here's what a project markdown file looks like:
+
+```markdown
+---
+title: "Edudu"
+description: "Educational platform for online learning"
+pubDate: "2025-01-15"
+heroImage: "/Edudu.png"
+tag: "Web Application"
+url: "https://edudu.example.com"
+---
+
+## About Edudu
+
+Edudu is an educational platform designed to...
+
+### Features
+
+- User authentication
+- Course management
+- Interactive lessons
+```
+
+## Type Safety Benefits
+
+With content collections, you get:
+
+1. **Build-time validation**: Invalid frontmatter causes build errors
+2. **TypeScript autocomplete**: IDE suggestions for collection fields
+3. **Type errors**: Catch mistakes before deployment
+4. **Refactoring safety**: Change schema, update all usages
+
+### Example Type Error
+
+```astro
+{projects.map((project) => (
+    <Card 
+        title={project.data.titel}  {/* ❌ TypeScript error: 'titel' doesn't exist */}
+    />
+))}
+```
+
+## Dynamic Routes with Collections
+
+Generate pages for each project using dynamic routes:
+
+```astro
+---
+// src/pages/projects/[...slug].astro
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+    const projects = await getCollection('projects');
+    return projects.map(project => ({
+        params: { slug: project.slug },
+        props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<Layout title={project.data.title}>
+    <h1>{project.data.title}</h1>
+    <p>{project.data.description}</p>
+    <Content />
+</Layout>
+```
+
+<Info>
+The `[...slug].astro` rest parameter matches any path depth, allowing for flexible URL structures.
+</Info>
+
+## Adding New Projects
+
+To add a new project:
+
+1. Create a new `.md` file in `src/content/projects/`
+2. Add frontmatter with all required fields:
+
+```markdown
+---
+title: "My New Project"
+description: "A cool new web app"
+pubDate: "2025-03-14"
+heroImage: "/new-project.png"
+tag: "Web App"
+url: "https://example.com"
+---
+
+Project content goes here...
+```
+
+3. Rebuild the site - your project appears automatically!
+
+<Tip>
+No code changes needed! Adding a new markdown file automatically creates a new project card and detail page.
+</Tip>
+
+## Advanced Querying
+
+Filter and sort collections:
+
+```astro
+---
+import { getCollection } from 'astro:content';
+
+// Get all projects
+const allProjects = await getCollection('projects');
+
+// Filter by tag
+const webApps = await getCollection('projects', ({ data }) => {
+    return data.tag === 'Web Application';
+});
+
+// Sort by date
+const sortedProjects = allProjects.sort((a, b) => 
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+```
+
+## Collections Export
+
+The `collections` object must be exported from `config.ts`:
+
+```typescript
+export const collections = { 
+    'projects': projectsCollection 
+};
+```
+
+Each key in this object becomes a queryable collection name:
+
+```astro
+await getCollection('projects')  // ✅ Works
+await getCollection('blog')      // ❌ Error: collection doesn't exist
+```
+
+## Related Documentation
+
+- [Components](/structure/components) - See how Projects.astro uses collections
+- [Project Overview](/structure/overview) - Understand the content directory structure
+- [Astro Content Collections Docs](https://docs.astro.build/en/guides/content-collections/) - Official Astro documentation

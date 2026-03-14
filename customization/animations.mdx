@@ -1,0 +1,410 @@
+---
+title: "Animations"
+description: "Understand and customize the fade-in animation system"
+---
+
+## Overview
+
+The RSantana Portfolio includes a smooth animation system that brings elements to life as they enter the viewport. The system uses CSS animations combined with JavaScript's Intersection Observer API.
+
+## Animation System Components
+
+The animation system consists of three parts:
+
+1. **CSS Keyframes**: Define the animation behavior
+2. **CSS Classes**: Apply animations to elements
+3. **Intersection Observer**: Trigger animations on scroll
+
+All animation code is located in `src/layouts/Layout.astro`.
+
+## CSS Keyframes
+
+Two keyframe animations are defined:
+
+```css
+/* Fade in with upward motion */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Simple fade in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+```
+
+### How It Works
+
+- **fadeInUp**: Elements start 30px below their final position and fade in while moving up
+- **fadeIn**: Elements simply fade from transparent to opaque
+
+<Tip>
+The `translateY(30px)` creates a subtle upward motion that feels natural and polished.
+</Tip>
+
+## Animation Classes
+
+### On-Load Animations
+
+For elements that animate immediately when the page loads:
+
+```css
+.animate-on-load {
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+```
+
+**Usage Example**:
+```html
+<h1 class="animate-on-load">Welcome to My Portfolio</h1>
+```
+
+### Staggered Delays
+
+Create sequential animations with delay classes:
+
+```css
+.animate-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-3 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-4 {
+  animation-delay: 0.4s;
+}
+```
+
+**Usage Example**:
+```html
+<h1 class="animate-on-load">Title</h1>
+<p class="animate-on-load animate-delay-1">Subtitle</p>
+<div class="animate-on-load animate-delay-2">Content</div>
+<button class="animate-on-load animate-delay-3">CTA</button>
+```
+
+<Note>
+Each delay class adds 0.1s, creating a smooth cascading effect.
+</Note>
+
+### Scroll-Triggered Animations
+
+For elements that animate when scrolled into view:
+
+```css
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+```
+
+**Usage Example**:
+```html
+<div class="fade-in-up">
+  This animates when scrolled into view
+</div>
+```
+
+## Intersection Observer
+
+The JavaScript that powers scroll animations:
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Observe all elements with fade-in-up class
+  document.querySelectorAll('.fade-in-up').forEach(element => {
+    observer.observe(element);
+  });
+});
+```
+
+### How It Works
+
+1. **Wait for DOM**: Script runs after page fully loads
+2. **Configure Observer**: Set up with 10% threshold (triggers when 10% visible)
+3. **Watch Elements**: Observes all `.fade-in-up` elements
+4. **Trigger Animation**: Adds `.visible` class when element enters viewport
+5. **Unobserve**: Stops watching after animation triggers (performance optimization)
+
+### Observer Options Explained
+
+| Option | Value | Purpose |
+|--------|-------|--------|
+| `root` | `null` | Use viewport as the root (not a specific container) |
+| `rootMargin` | `'0px'` | No offset from viewport edges |
+| `threshold` | `0.1` | Trigger when 10% of element is visible |
+
+## Adding Animations to Components
+
+### Example 1: Hero Section
+
+```astro
+<section>
+  <h1 class="animate-on-load">John Doe</h1>
+  <p class="animate-on-load animate-delay-1">Web Developer</p>
+  <a href="#contact" class="animate-on-load animate-delay-2">Get in Touch</a>
+</section>
+```
+
+### Example 2: Project Cards
+
+```astro
+{projects.map((project) => (
+  <article class="fade-in-up">
+    <img src={project.heroImage} alt={project.title} />
+    <h3>{project.title}</h3>
+    <p>{project.description}</p>
+  </article>
+))}
+```
+
+### Example 3: About Section
+
+```astro
+<section>
+  <h2 class="fade-in-up">About Me</h2>
+  <p class="fade-in-up">First paragraph...</p>
+  <p class="fade-in-up">Second paragraph...</p>
+</section>
+```
+
+<Tip>
+Use `animate-on-load` for hero/above-the-fold content and `fade-in-up` for content that requires scrolling.
+</Tip>
+
+## Customization Examples
+
+### Adjust Animation Speed
+
+Make animations faster or slower:
+
+```css
+.animate-on-load {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards; /* Faster: 0.5s instead of 0.8s */
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1s ease-out, transform 1s ease-out; /* Slower: 1s instead of 0.6s */
+}
+```
+
+### Change Animation Distance
+
+Adjust how far elements travel:
+
+```css
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px); /* Increased from 30px */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+```
+
+### Add More Delay Classes
+
+```css
+.animate-delay-5 {
+  animation-delay: 0.5s;
+}
+
+.animate-delay-6 {
+  animation-delay: 0.6s;
+}
+```
+
+### Create Fade-In from Left
+
+```css
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-from-left {
+  opacity: 0;
+  animation: fadeInLeft 0.8s ease-out forwards;
+}
+```
+
+### Adjust Intersection Threshold
+
+Change when scroll animations trigger:
+
+```javascript
+const observerOptions = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0.3  // Trigger when 30% visible (instead of 10%)
+};
+```
+
+## Advanced Techniques
+
+### Trigger Before Element Enters Viewport
+
+Use `rootMargin` to trigger animations early:
+
+```javascript
+const observerOptions = {
+  root: null,
+  rootMargin: '100px',  // Trigger 100px before element enters
+  threshold: 0.1
+};
+```
+
+### Multiple Animation Classes
+
+Create different animation types:
+
+```css
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scale-in {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scale-in.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+```
+
+Update the observer to watch all animation classes:
+
+```javascript
+// Observe multiple animation types
+document.querySelectorAll('.fade-in-up, .fade-in-right, .scale-in').forEach(element => {
+  observer.observe(element);
+});
+```
+
+### Animation Easing Options
+
+Experiment with different timing functions:
+
+```css
+/* Default */
+animation: fadeInUp 0.8s ease-out forwards;
+
+/* Bouncy */
+animation: fadeInUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+
+/* Smooth */
+animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+/* Sharp */
+animation: fadeInUp 0.8s ease-in-out forwards;
+```
+
+## Performance Considerations
+
+1. **Unobserve After Animation**: The code automatically unobserves elements after animating to save resources
+2. **Use `will-change` Sparingly**: Only add for truly dynamic animations
+3. **Avoid Animating Too Many Elements**: Limit to key sections for best performance
+4. **Use `transform` and `opacity`**: These properties are GPU-accelerated
+
+<Note>
+The current implementation is optimized for performance by unobserving elements after animation.
+</Note>
+
+## Accessibility
+
+Respect user preferences for reduced motion:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-load,
+  .fade-in-up {
+    animation: none;
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+```
+
+This ensures users who prefer reduced motion see content immediately without animations.
+
+## Debugging Tips
+
+1. **Check Class Names**: Ensure you're using the correct class (`.fade-in-up`, not `.fade-up`)
+2. **Inspect Element**: Use browser DevTools to verify the `.visible` class is added on scroll
+3. **Console Log**: Add `console.log('Observing:', element)` to debug observer
+4. **Reduce Threshold**: Lower `threshold` to `0.05` for easier triggering during testing
+
+```javascript
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    console.log('Element:', entry.target, 'Intersecting:', entry.isIntersecting);
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+```

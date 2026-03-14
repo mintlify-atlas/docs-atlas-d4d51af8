@@ -1,0 +1,286 @@
+---
+title: "Adding Projects"
+description: "Step-by-step guide to adding new projects to your portfolio"
+---
+
+## Overview
+
+Projects in the RSantana Portfolio are managed using Astro's Content Collections. Each project is a Markdown file with frontmatter metadata that automatically appears on your portfolio.
+
+## Content Collection Schema
+
+Projects follow a defined schema in `src/content/config.ts`:
+
+```typescript
+import { defineCollection, z } from 'astro:content';
+
+const projectsCollection = defineCollection({
+  // Type-check frontmatter using a schema
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    // Transform string to Date object
+    pubDate: z
+      .string()
+      .or(z.date())
+      .transform((val) => new Date(val)),
+    updatedDate: z
+      .string()
+      .optional()
+      .transform((str) => (str ? new Date(str) : undefined)),
+    heroImage: z.string().optional(),
+    tag: z.string().optional(),
+    // Optional direct URL to the project (absolute https:// or root-relative /path)
+    url: z.string().optional(),
+  }),
+});
+
+export const collections = { 'projects': projectsCollection };
+```
+
+## Frontmatter Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | Yes | Project name displayed as the heading |
+| `description` | string | Yes | Short description of the project |
+| `pubDate` | string/date | Yes | Publication date (YYYY-MM-DD format) |
+| `updatedDate` | string/date | No | Last update date (optional) |
+| `heroImage` | string | No | Path to project thumbnail/image |
+| `tag` | string | No | Category or technology tag |
+| `url` | string | No | Live project URL or GitHub link |
+
+<Note>
+All fields are type-checked by Zod, ensuring data consistency across your portfolio.
+</Note>
+
+## Example Project
+
+Here's a real example from the portfolio (`src/content/projects/Edudu.md`):
+
+```markdown
+---
+title: 'Edudu'
+description: 'Plataforma educativa para niños'
+pubDate: '2023-10-25'
+heroImage: '/Edudu.png'
+tag: 'Web developher'
+url: 'https://edudu-platform.netlify.app/'
+---
+```
+
+### Field Breakdown
+
+- **title**: "Edudu" - The project name
+- **description**: Brief explanation of what the project does
+- **pubDate**: October 25, 2023 - When the project was completed/published
+- **heroImage**: `/Edudu.png` - Image stored in the `public/` folder
+- **tag**: "Web developher" - Project category
+- **url**: Live demo link on Netlify
+
+## Adding a New Project
+
+<Steps>
+  <Step title="Create the Markdown file">
+    Navigate to `src/content/projects/` and create a new `.md` file:
+    
+    ```bash
+    src/content/projects/my-new-project.md
+    ```
+    
+    **File Naming Convention**: Use lowercase with hyphens (kebab-case)
+    - ✅ `e-commerce-app.md`
+    - ✅ `weather-dashboard.md`
+    - ❌ `My New Project.md`
+    - ❌ `myNewProject.md`
+  </Step>
+
+  <Step title="Add frontmatter metadata">
+    Open the file and add the required frontmatter:
+    
+    ```markdown
+    ---
+    title: 'My E-Commerce App'
+    description: 'A full-stack online shopping platform with cart and checkout'
+    pubDate: '2024-03-15'
+    heroImage: '/ecommerce-preview.png'
+    tag: 'Full Stack'
+    url: 'https://my-ecommerce-demo.com'
+    ---
+    ```
+  </Step>
+
+  <Step title="Add project image (optional)">
+    If you want to include a hero image:
+    
+    1. Place the image in the `public/` folder:
+       ```
+       public/ecommerce-preview.png
+       ```
+    
+    2. Reference it with a leading slash in frontmatter:
+       ```yaml
+       heroImage: '/ecommerce-preview.png'
+       ```
+    
+    <Tip>
+    Optimize images before adding them (recommended: 800x600px or similar aspect ratio).
+    </Tip>
+  </Step>
+
+  <Step title="Add project content (optional)">
+    Below the frontmatter, you can add detailed content in Markdown:
+    
+    ```markdown
+    ---
+    title: 'My E-Commerce App'
+    description: 'A full-stack online shopping platform'
+    pubDate: '2024-03-15'
+    ---
+    
+    ## Features
+    
+    - User authentication
+    - Product catalog with search
+    - Shopping cart functionality
+    - Stripe payment integration
+    
+    ## Technologies Used
+    
+    - React
+    - Node.js
+    - MongoDB
+    - Tailwind CSS
+    ```
+    
+    <Note>
+    Project content appears on individual project detail pages if you implement them.
+    </Note>
+  </Step>
+
+  <Step title="Verify the project appears">
+    Start the development server:
+    
+    ```bash
+    npm run dev
+    ```
+    
+    Your new project will automatically appear in the projects list. No additional configuration needed!
+  </Step>
+</Steps>
+
+## Complete Example
+
+Here's a full example with all optional fields:
+
+```markdown
+---
+title: 'Weather Dashboard'
+description: 'Real-time weather app with 7-day forecast and location search'
+pubDate: '2024-02-10'
+updatedDate: '2024-03-01'
+heroImage: '/weather-app.png'
+tag: 'Frontend'
+url: 'https://github.com/yourusername/weather-dashboard'
+---
+
+A beautiful weather application built with Astro and the OpenWeather API.
+
+## Key Features
+
+- Current weather conditions
+- 7-day forecast
+- Location search with autocomplete
+- Responsive design
+- Dark mode support
+
+## What I Learned
+
+- Working with external APIs
+- Managing state in Astro
+- Responsive CSS Grid layouts
+```
+
+## Automatic Features
+
+When you add a project file, Astro's Content Collections automatically:
+
+✅ **Type-checks** all frontmatter fields
+✅ **Transforms** date strings to Date objects
+✅ **Validates** required fields are present
+✅ **Generates** type-safe imports
+✅ **Displays** the project on your portfolio
+
+<Tip>
+Projects are automatically sorted by `pubDate` with the newest first.
+</Tip>
+
+## Common Patterns
+
+### Project Without URL
+
+Some projects might not have a live demo:
+
+```markdown
+---
+title: 'Internal Tool'
+description: 'Company dashboard for analytics'
+pubDate: '2024-01-15'
+tag: 'Private Project'
+---
+```
+
+### Project with Multiple Tags
+
+While the schema supports one tag, you can include multiple in the description:
+
+```markdown
+---
+title: 'Full Stack Blog'
+description: 'Blog platform with CMS (React, Node.js, PostgreSQL)'
+pubDate: '2024-03-01'
+tag: 'Full Stack'
+---
+```
+
+### Updated Project
+
+Use `updatedDate` to show when a project was last modified:
+
+```markdown
+---
+title: 'Portfolio Site'
+description: 'Personal portfolio built with Astro'
+pubDate: '2023-12-01'
+updatedDate: '2024-03-14'
+tag: 'Astro'
+---
+```
+
+## Troubleshooting
+
+### Project Not Appearing
+
+1. Check file location: Must be in `src/content/projects/`
+2. Verify frontmatter syntax: YAML requires proper indentation
+3. Ensure required fields are present: `title`, `description`, `pubDate`
+4. Restart dev server: `npm run dev`
+
+### Type Errors
+
+If you see TypeScript errors:
+
+```bash
+# Regenerate content types
+npm run dev
+```
+
+Astro automatically generates types for content collections on server start.
+
+### Date Format Issues
+
+Always use ISO date format:
+
+✅ `pubDate: '2024-03-14'`  
+❌ `pubDate: '03/14/2024'`  
+❌ `pubDate: 'March 14, 2024'`

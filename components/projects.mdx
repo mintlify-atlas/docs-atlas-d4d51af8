@@ -1,0 +1,281 @@
+---
+title: 'Projects Component'
+description: 'Container component that displays all portfolio projects using Astro content collections'
+---
+
+## Overview
+
+The Projects component is a container that fetches and displays all portfolio projects using Astro's content collections feature. It creates a responsive grid layout of project cards.
+
+## Component Code
+
+```astro
+---
+import { getCollection } from 'astro:content';
+import Card from "./Card.astro";
+const projects = await getCollection('projects');
+---
+<section id="projects" class="animate-on-load animate-delay-3"> 
+    <header class=" mb-4">
+        <h2 class="m-0 fs-4 fw-bold">Proyectos</h2>
+    </header>
+    <section class="row gap-3">
+        {projects.map((project: any) => (
+                <Card 
+                    src={project.data.heroImage}
+                    description={project.data.description}
+                    title={project.data.title}
+                    tag={project.data.tag}
+                    url={project.data.url}
+                />
+        ))}
+    </section>
+</section>
+```
+
+## Features
+
+### Content Collections Integration
+
+The component uses Astro's `getCollection()` function to fetch projects:
+
+```typescript
+const projects = await getCollection('projects');
+```
+
+<Note>
+  This assumes you have a content collection configured at `src/content/projects/` with a schema defining the project data structure.
+</Note>
+
+### Dynamic Project Rendering
+
+The component maps over the projects array and renders a Card component for each project:
+
+```astro
+{projects.map((project: any) => (
+    <Card 
+        src={project.data.heroImage}
+        description={project.data.description}
+        title={project.data.title}
+        tag={project.data.tag}
+        url={project.data.url}
+    />
+))}
+```
+
+## Project Data Structure
+
+Based on the component code, each project in the collection should have:
+
+<ParamField path="heroImage" type="string" required>
+  Path to the project's preview image
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Brief description of the project
+</ParamField>
+
+<ParamField path="title" type="string" required>
+  Project name/title
+</ParamField>
+
+<ParamField path="tag" type="string" required>
+  Project category or technology tag
+</ParamField>
+
+<ParamField path="url" type="string" required>
+  External URL to view the live project
+</ParamField>
+
+## Layout Structure
+
+### Section Header
+
+```astro
+<header class=" mb-4">
+    <h2 class="m-0 fs-4 fw-bold">Proyectos</h2>
+</header>
+```
+
+Displays "Proyectos" (Spanish for "Projects") as a section title.
+
+### Grid Layout
+
+```astro
+<section class="row gap-3">
+    <!-- Cards rendered here -->
+</section>
+```
+
+Uses Bootstrap's row system with gap utilities for spacing between cards.
+
+## Bootstrap Classes Used
+
+<ParamField path="mb-4" type="spacing">
+  Margin bottom of 4 spacing units for the header
+</ParamField>
+
+<ParamField path="m-0" type="spacing">
+  Removes all default margins from the h2 element
+</ParamField>
+
+<ParamField path="fs-4" type="typography">
+  Font size 4 for the section heading
+</ParamField>
+
+<ParamField path="fw-bold" type="typography">
+  Bold font weight for the heading
+</ParamField>
+
+<ParamField path="row" type="layout">
+  Bootstrap grid row container
+</ParamField>
+
+<ParamField path="gap-3" type="spacing">
+  Creates 3 spacing units of gap between grid items
+</ParamField>
+
+## Animation Features
+
+<Note>
+  The Projects section uses animation classes:
+  - `animate-on-load`: Triggers on page load
+  - `animate-delay-3`: Third in the animation sequence (after nav and header)
+</Note>
+
+Animation order:
+1. Nav (delay-1)
+2. Header (delay-2)
+3. **Projects (delay-3)**
+4. Footer (delay-4)
+
+## Setting Up Content Collections
+
+To use this component, you need to configure a projects content collection:
+
+### 1. Create Collection Schema
+
+```typescript
+// src/content/config.ts
+import { defineCollection, z } from 'astro:content';
+
+const projectsCollection = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    heroImage: z.string(),
+    tag: z.string(),
+    url: z.string().url(),
+  }),
+});
+
+export const collections = {
+  projects: projectsCollection,
+};
+```
+
+### 2. Create Project Files
+
+```markdown
+// src/content/projects/ecommerce-site.md
+---
+title: "E-commerce Platform"
+description: "Modern online store with payment integration"
+heroImage: "/images/ecommerce.jpg"
+tag: "Web Development"
+url: "https://example.com"
+---
+```
+
+## Usage Example
+
+```astro
+---
+import Projects from '../components/Projects.astro';
+---
+
+<html>
+  <body>
+    <main>
+      <Projects />
+    </main>
+  </body>
+</html>
+```
+
+## Customization Tips
+
+<Tip>
+  You can filter or sort projects before mapping:
+</Tip>
+
+```astro
+---
+import { getCollection } from 'astro:content';
+import Card from "./Card.astro";
+const allProjects = await getCollection('projects');
+
+// Filter featured projects
+const projects = allProjects.filter(p => p.data.featured);
+
+// Or sort by date
+const projects = allProjects.sort((a, b) => 
+  b.data.pubDate - a.data.pubDate
+);
+---
+```
+
+### Adding Categories
+
+You can group projects by tag:
+
+```astro
+---
+const projectsByTag = projects.reduce((acc, project) => {
+  const tag = project.data.tag;
+  if (!acc[tag]) acc[tag] = [];
+  acc[tag].push(project);
+  return acc;
+}, {});
+---
+
+{Object.entries(projectsByTag).map(([tag, tagProjects]) => (
+  <div>
+    <h3>{tag}</h3>
+    <div class="row gap-3">
+      {tagProjects.map(project => (
+        <Card {...project.data} />
+      ))}
+    </div>
+  </div>
+))}
+```
+
+## Performance Considerations
+
+<Note>
+  The `getCollection()` function runs at build time, not runtime, so there's no performance impact on the client. All project data is fetched during the build process.
+</Note>
+
+### Benefits:
+- Fast page loads (static HTML)
+- No client-side data fetching
+- SEO-friendly (all content in HTML)
+- Type-safe with TypeScript
+
+## Responsive Design
+
+The `row` class with `gap-3` creates a flexible grid that:
+- Automatically wraps cards based on available space
+- Maintains consistent spacing between items
+- Works well on mobile, tablet, and desktop screens
+
+<Tip>
+  Consider adding Bootstrap column classes to the Card component for more control over grid layout:
+</Tip>
+
+```astro
+<div class="col-12 col-md-6 col-lg-4">
+  <Card {...props} />
+</div>
+```

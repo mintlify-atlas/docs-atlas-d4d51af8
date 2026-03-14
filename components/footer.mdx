@@ -1,0 +1,334 @@
+---
+title: 'Footer Component'
+description: 'Site footer with social links, contact information, and dynamic time display'
+---
+
+## Overview
+
+The Footer component provides the bottom section of the portfolio with social media links, copyright information, and includes a TypeScript script for time display functionality.
+
+## Component Code
+
+```astro
+<footer class="my-5 py-5 animate-on-load animate-delay-4">
+    <ul class="nav gap-4 mb-2 ">
+        <li class="nav-item">
+            <a class="nav-link fw-medium p-0 text-secondary" href="/projects">
+                <i class="bi bi-arrow-right"></i>
+                Linkedin
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link fw-medium p-0 text-secondary" href="/about">
+                <i class="bi bi-arrow-right"></i>
+                Github
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link fw-medium p-0  text-secondary" href="/blog">
+                <i class="bi bi-arrow-right"></i>
+                Email
+            </a>
+        </li>
+    </ul>
+    <p class="m-0 mb-2">&copy; Diseñado y desarrollado por Ronald Santana 2025</p>
+</footer>
+
+<script>
+    function actualizarHora(): void {
+        const ahora = new Date();
+        const hora: string = ahora.toLocaleTimeString();
+        const horaElem = document.getElementById("hora");
+        if (horaElem) {
+            horaElem.textContent = hora;
+        }
+    }
+
+    actualizarHora();
+    setInterval(actualizarHora, 1000);
+</script>
+```
+
+## Features
+
+### Social & Contact Links
+
+The footer includes three main links:
+
+1. **LinkedIn** - Professional networking
+2. **GitHub** - Code repositories
+3. **Email** - Direct contact
+
+Each link uses Bootstrap Icons arrow (`bi-arrow-right`) as a visual indicator.
+
+<Note>
+  Currently, the links point to internal routes (`/projects`, `/about`, `/blog`). These should be updated to actual external URLs for LinkedIn, GitHub, and email contact.
+</Note>
+
+### Suggested Link Updates
+
+```astro
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="https://linkedin.com/in/your-profile" 
+       target="_blank" 
+       rel="noopener noreferrer">
+        <i class="bi bi-arrow-right"></i>
+        Linkedin
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="https://github.com/your-username"
+       target="_blank" 
+       rel="noopener noreferrer">
+        <i class="bi bi-arrow-right"></i>
+        Github
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="mailto:your-email@example.com">
+        <i class="bi bi-arrow-right"></i>
+        Email
+    </a>
+</li>
+```
+
+### Copyright Notice
+
+```astro
+<p class="m-0 mb-2">&copy; Diseñado y desarrollado por Ronald Santana 2025</p>
+```
+
+Displays copyright and credit in Spanish: "Designed and developed by Ronald Santana 2025"
+
+## Bootstrap Classes Used
+
+<ParamField path="my-5" type="spacing">
+  Margin on Y-axis (top and bottom) of 5 spacing units
+</ParamField>
+
+<ParamField path="py-5" type="spacing">
+  Padding on Y-axis (top and bottom) of 5 spacing units
+</ParamField>
+
+<ParamField path="nav" type="layout">
+  Bootstrap's navigation list component
+</ParamField>
+
+<ParamField path="gap-4" type="spacing">
+  Creates 4 spacing units of gap between navigation items
+</ParamField>
+
+<ParamField path="mb-2" type="spacing">
+  Margin bottom of 2 spacing units
+</ParamField>
+
+<ParamField path="nav-item" type="component">
+  Bootstrap navigation item wrapper
+</ParamField>
+
+<ParamField path="nav-link" type="component">
+  Bootstrap navigation link styling
+</ParamField>
+
+<ParamField path="fw-medium" type="typography">
+  Medium font weight
+</ParamField>
+
+<ParamField path="p-0" type="spacing">
+  Removes all padding from the link
+</ParamField>
+
+<ParamField path="text-secondary" type="color">
+  Applies Bootstrap's secondary text color (typically gray)
+</ParamField>
+
+<ParamField path="m-0" type="spacing">
+  Removes all default margins
+</ParamField>
+
+## Bootstrap Icons
+
+The component uses Bootstrap Icons for visual enhancement:
+
+```html
+<i class="bi bi-arrow-right"></i>
+```
+
+<Tip>
+  Make sure to include Bootstrap Icons in your project:
+</Tip>
+
+```html
+<!-- In your layout head -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+```
+
+## Animation Features
+
+<Note>
+  The footer is the last element in the animation sequence:
+  - `animate-on-load`: Triggers on page load
+  - `animate-delay-4`: Fourth and final in the staggered animation
+</Note>
+
+Animation sequence:
+1. Nav (delay-1)
+2. Header (delay-2)
+3. Projects (delay-3)
+4. **Footer (delay-4)**
+
+## TypeScript Script
+
+The component includes a TypeScript function for updating time:
+
+```typescript
+function actualizarHora(): void {
+    const ahora = new Date();
+    const hora: string = ahora.toLocaleTimeString();
+    const horaElem = document.getElementById("hora");
+    if (horaElem) {
+        horaElem.textContent = hora;
+    }
+}
+
+actualizarHora();
+setInterval(actualizarHora, 1000);
+```
+
+### How It Works
+
+1. **Function Definition**: `actualizarHora()` (Spanish for "update time")
+2. **Get Current Time**: Uses `new Date()` and `toLocaleTimeString()`
+3. **Find Element**: Searches for an element with `id="hora"`
+4. **Update Display**: Sets the text content to the current time
+5. **Initial Call**: Runs once immediately
+6. **Interval**: Updates every 1000ms (1 second)
+
+<Note>
+  The script references an element with `id="hora"` that doesn't exist in the current component markup. This suggests the time display feature may have been removed or is intended for a different section.
+</Note>
+
+### Adding Time Display
+
+To use the time functionality, add this to the footer:
+
+```astro
+<footer class="my-5 py-5 animate-on-load animate-delay-4">
+    <ul class="nav gap-4 mb-2">
+        <!-- Links here -->
+    </ul>
+    <p class="m-0 mb-2">&copy; Diseñado y desarrollado por Ronald Santana 2025</p>
+    <p class="text-secondary small">
+        Current time: <span id="hora"></span>
+    </p>
+</footer>
+```
+
+## Usage Example
+
+```astro
+---
+import Footer from '../components/Footer.astro';
+---
+
+<html>
+  <body>
+    <!-- Page content -->
+    <Footer />
+  </body>
+</html>
+```
+
+## Customization Examples
+
+### Adding More Social Links
+
+```astro
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="https://twitter.com/your-handle"
+       target="_blank" 
+       rel="noopener noreferrer">
+        <i class="bi bi-arrow-right"></i>
+        Twitter
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="https://codepen.io/your-username"
+       target="_blank" 
+       rel="noopener noreferrer">
+        <i class="bi bi-arrow-right"></i>
+        CodePen
+    </a>
+</li>
+```
+
+### Using Platform-Specific Icons
+
+```astro
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="https://linkedin.com/in/your-profile">
+        <i class="bi bi-linkedin"></i> <!-- Platform-specific icon -->
+        Linkedin
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="https://github.com/your-username">
+        <i class="bi bi-github"></i>
+        Github
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link fw-medium p-0 text-secondary" 
+       href="mailto:your-email@example.com">
+        <i class="bi bi-envelope"></i>
+        Email
+    </a>
+</li>
+```
+
+## Accessibility
+
+<Tip>
+  The footer uses semantic HTML (`<footer>`, `<nav>`, `<ul>`) which helps screen readers understand the page structure.
+</Tip>
+
+### Improvements for Accessibility
+
+1. Add `aria-label` to the navigation:
+
+```astro
+<ul class="nav gap-4 mb-2" aria-label="Social media links">
+```
+
+2. Add screen reader text for icon-only indicators:
+
+```astro
+<a class="nav-link fw-medium p-0 text-secondary" href="...">
+    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+    <span>Linkedin</span>
+</a>
+```
+
+## Responsive Design
+
+The footer is responsive by default:
+- Uses Bootstrap's responsive spacing utilities
+- `gap-4` maintains consistent spacing on all screen sizes
+- Navigation items wrap naturally on smaller screens
+
+<Tip>
+  For better mobile experience, consider using flexbox utilities:
+</Tip>
+
+```astro
+<ul class="nav gap-4 mb-2 flex-column flex-md-row">
+```
+
+This stacks links vertically on mobile and horizontally on medium+ screens.

@@ -1,0 +1,257 @@
+---
+title: GitHub Actions Deployment
+description: Automate deployment to cPanel using GitHub Actions workflow
+---
+
+## Overview
+
+This portfolio uses GitHub Actions to automatically build and deploy the site to cPanel via FTP whenever changes are pushed to the main branch.
+
+## Workflow Configuration
+
+The deployment workflow is defined in `.github/workflows/deploy.yml`:
+
+```yaml
+name: Deploy Astro to cPanel
+
+on:
+  push:
+    branches:
+      - main   # Cambia si tu rama principal es diferente
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar tu repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Instalar Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. Instalar dependencias
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Compilar Astro
+      - name: Build Astro project
+        run: npm run build
+
+      # 5. Subir archivos al servidor cPanel vía FTP
+      - name: Deploy to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: dist/
+          server-dir: public_html/
+```
+
+## Workflow Steps Explained
+
+### 1. Checkout Repository
+
+```yaml
+- name: Checkout repository
+  uses: actions/checkout@v3
+```
+
+Downloads your repository code to the GitHub Actions runner so it can be built.
+
+### 2. Setup Node.js
+
+```yaml
+- name: Setup Node.js
+  uses: actions/setup-node@v3
+  with:
+    node-version: '18'
+```
+
+Installs Node.js version 18, which is required to build the Astro project.
+
+### 3. Install Dependencies
+
+```yaml
+- name: Install dependencies
+  run: npm install
+```
+
+Installs all npm packages defined in `package.json`, including Astro and any other dependencies.
+
+### 4. Build Astro Project
+
+```yaml
+- name: Build Astro project
+  run: npm run build
+```
+
+Compiles the Astro site and generates static files in the `dist/` directory.
+
+### 5. Deploy to cPanel via FTP
+
+```yaml
+- name: Deploy to cPanel via FTP
+  uses: SamKirkland/FTP-Deploy-Action@v4.3.0
+  with:
+    server: ${{ secrets.FTP_SERVER }}
+    username: ${{ secrets.FTP_USERNAME }}
+    password: ${{ secrets.FTP_PASSWORD }}
+    local-dir: dist/
+    server-dir: public_html/
+```
+
+Uploads the built files from `dist/` to your cPanel hosting via FTP. The files are placed in the `public_html/` directory.
+
+## Deployment Triggers
+
+The workflow automatically runs when:
+
+- Code is pushed to the `main` branch
+- A pull request is merged into the `main` branch
+
+<Warning>
+  If your default branch has a different name (e.g., `master`), update the `branches` configuration in the workflow file.
+</Warning>
+
+## Required Secrets
+
+For the workflow to function, you need to configure three secrets in your GitHub repository:
+
+<Steps>
+  <Step title="Navigate to repository settings">
+    Go to your repository on GitHub → **Settings** → **Secrets and variables** → **Actions**
+  </Step>
+  
+  <Step title="Add FTP_SERVER secret">
+    Click **New repository secret** and add:
+    - Name: `FTP_SERVER`
+    - Value: Your FTP server address (e.g., `ftp.yourdomain.com`)
+  </Step>
+  
+  <Step title="Add FTP_USERNAME secret">
+    Add another secret:
+    - Name: `FTP_USERNAME`
+    - Value: Your cPanel FTP username
+  </Step>
+  
+  <Step title="Add FTP_PASSWORD secret">
+    Add the final secret:
+    - Name: `FTP_PASSWORD`
+    - Value: Your cPanel FTP password
+  </Step>
+</Steps>
+
+<Warning>
+  Never commit FTP credentials directly to your repository. Always use GitHub Secrets to store sensitive information.
+</Warning>
+
+## Setting Up the Workflow
+
+If you're setting up this workflow in a new repository:
+
+<Steps>
+  <Step title="Create workflow directory">
+    Create the `.github/workflows/` directory in your repository root:
+    ```bash
+    mkdir -p .github/workflows
+    ```
+  </Step>
+  
+  <Step title="Create workflow file">
+    Create `deploy.yml` in the workflows directory and paste the configuration shown above.
+  </Step>
+  
+  <Step title="Configure secrets">
+    Add the three required secrets (`FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`) in your repository settings.
+  </Step>
+  
+  <Step title="Commit and push">
+    ```bash
+    git add .github/workflows/deploy.yml
+    git commit -m "Add GitHub Actions deployment workflow"
+    git push origin main
+    ```
+  </Step>
+  
+  <Step title="Verify deployment">
+    Go to the **Actions** tab in your GitHub repository to see the workflow run.
+  </Step>
+</Steps>
+
+## Monitoring Deployments
+
+You can monitor your deployments in the GitHub Actions interface:
+
+1. Go to your repository on GitHub
+2. Click the **Actions** tab
+3. Select a workflow run to see detailed logs for each step
+
+## Troubleshooting
+
+### Build Fails During npm install
+
+**Problem**: Dependencies fail to install
+
+**Solution**: Ensure your `package.json` is valid and committed to the repository. Check the Actions log for specific error messages.
+
+### FTP Deployment Fails
+
+**Problem**: FTP connection or authentication errors
+
+**Solutions**:
+- Verify that all three FTP secrets are correctly configured
+- Check that your FTP server address doesn't include `ftp://` (use `ftp.yourdomain.com` not `ftp://ftp.yourdomain.com`)
+- Ensure your cPanel FTP account has write permissions to `public_html/`
+- Check if your hosting provider requires passive mode FTP
+
+### Files Don't Update on Live Site
+
+**Problem**: Workflow succeeds but site doesn't update
+
+**Solutions**:
+- Verify the `server-dir` path matches your hosting configuration (usually `public_html/` or `public_html/subdirectory/`)
+- Check browser cache - try hard refresh (Ctrl+F5 or Cmd+Shift+R)
+- Verify files were uploaded by checking the FTP deployment step logs
+
+### Workflow Doesn't Trigger
+
+**Problem**: Pushing to main doesn't start the workflow
+
+**Solutions**:
+- Ensure the workflow file is in `.github/workflows/deploy.yml`
+- Check that you're pushing to the correct branch (must match the `branches` configuration)
+- Verify the YAML syntax is valid
+- Check the Actions tab for any disabled workflows
+
+<Warning>
+  If you change the FTP credentials, remember to update the GitHub Secrets. The workflow will fail with old credentials.
+</Warning>
+
+## Alternative Deployment Methods
+
+While this portfolio uses FTP deployment to cPanel, GitHub Actions can deploy to many platforms:
+
+- **GitHub Pages**: Use `actions/deploy-pages`
+- **Netlify**: Use `netlify/actions/cli`
+- **Vercel**: Use `amondnet/vercel-action`
+- **AWS S3**: Use `aws-actions/configure-aws-credentials`
+
+See the [Deployment Overview](/deployment/overview) for other hosting options.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Deployment Overview" icon="rocket" href="/deployment/overview">
+    Explore other deployment platform options
+  </Card>
+  
+  <Card title="Quickstart" icon="bolt" href="/quickstart">
+    Learn how to set up the project locally
+  </Card>
+</CardGroup>
