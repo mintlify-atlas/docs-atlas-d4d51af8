@@ -1,0 +1,70 @@
+{
+  "projectType": "frontend",
+  "projectName": "RSantana Portfolio",
+  "projectDescription": "Personal portfolio website built with Astro and Bootstrap showcasing web development projects",
+  "theme": "mint",
+  "primaryColor": "#040404",
+  "lightColor": null,
+  "darkColor": null,
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Project Structure",
+        "pages": [
+          "structure/overview",
+          "structure/components",
+          "structure/layouts",
+          "structure/content-collections"
+        ]
+      },
+      {
+        "group": "Components",
+        "pages": [
+          "components/header",
+          "components/nav",
+          "components/card",
+          "components/projects",
+          "components/footer"
+        ]
+      },
+      {
+        "group": "Customization",
+        "pages": [
+          "customization/styling",
+          "customization/adding-projects",
+          "customization/animations"
+        ]
+      },
+      {
+        "group": "Deployment",
+        "pages": [
+          "deployment/overview",
+          "deployment/github-actions"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Content collections for project management",
+    "Bootstrap 5 integration for responsive design",
+    "Intersection Observer animations on scroll",
+    "Astro static site generation",
+    "Project showcase with dynamic routing"
+  ],
+  "publicApiSurface": [
+    "Layout.astro component",
+    "Header.astro component",
+    "Nav.astro component",
+    "Card.astro component",
+    "Projects.astro component",
+    "Footer.astro component",
+    "projects content collection schema"
+  ]
+}
